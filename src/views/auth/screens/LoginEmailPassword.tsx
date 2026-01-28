@@ -15,94 +15,108 @@ import { UserSessionService } from "../../../services/UserSessionService";
 import eventEmitter from "../../../utils/eventEmiter";
 import KeyboardAwareContainer from "../../common/components/KeyboardAwareContainer";
 
-const LoginEmailPassword: React.FC<DefaultScreenProps> = ({
-    navigation,
-    route
-}) => {
-    const theme = useContext(ThemeContext)
-    const [email, setEmail] = useState<string>()
-    const [password, setPassword] = useState<string>()
-    const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string>()
+const LoginEmailPassword: React.FC<DefaultScreenProps> = ({ navigation }) => {
+    const theme = useContext(ThemeContext);
+
+    const [email, setEmail] = useState<string>();
+    const [password, setPassword] = useState<string>();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<string>();
 
     useEffect(() => {
-        setError(undefined)
-    }, [email, password])
+        setError(undefined);
+    }, [email, password]);
 
     const handleSubmit = () => {
-        setLoading(true)
-        const authService = new UserAuthService()
-        authService.postUserLoginRepo({
-            email: email,
-            password: password,
-            login_provider: 'email-password'
-        }).then(res => {
-            if (res?.data?.result) {
-                Promise.all([
-                    UserSessionService.setAuthToken({
-                        accessToken: res.data.data.access,
-                        refreshToken: res.data.data.refresh
-                    }),
-                    UserSessionService.setUserProfile({
-                        id: res.data.data.user.id,
-                        email: res.data.data.user.email,
-                        first_name: res.data.data.user.first_name,
-                        last_name: res.data.data.user.last_name,
-                        mobile_number: res.data.data.user.mobile_number,
-                        role_id: res.data.data.user.role_id,
-                        role_name: res.data.data.user.role_name,
-                    })
-                ]).then(resp => {
-                    eventEmitter.emit("user-login")
-                })
-            }
-        }).catch(err => {
-            console.log(err?.message)
-            if (err?.response?.data?.message) {
-                setError(err.response.data.message)
-            }
-        }).finally(() => {
-            setLoading(false)
-        })
-    }
+        setLoading(true);
+        const authService = new UserAuthService();
+        authService
+            .postUserLoginRepo({
+                email,
+                password,
+                login_provider: "email-password",
+            })
+            .then((res) => {
+                if (res?.data?.result) {
+                    Promise.all([
+                        UserSessionService.setAuthToken({
+                            accessToken: res.data.data.access,
+                            refreshToken: res.data.data.refresh,
+                        }),
+                        UserSessionService.setUserProfile({
+                            id: res.data.data.user.id,
+                            email: res.data.data.user.email,
+                            first_name: res.data.data.user.first_name,
+                            last_name: res.data.data.user.last_name,
+                            mobile_number: res.data.data.user.mobile_number,
+                            role_id: res.data.data.user.role_id,
+                            role_name: res.data.data.user.role_name,
+                        }),
+                    ]).then(() => {
+                        eventEmitter.emit("user-login");
+                    });
+                }
+            })
+            .catch((err) => {
+                if (err?.response?.data?.message) {
+                    setError(err);
+                } else {
+                    setError(err.response.data.message);
+                }
+            })
+            .finally(() => setLoading(false));
+    };
 
     return (
         <BaseView>
-            <View style={{ flex:1, backgroundColor: theme.colors.background}}>
-                <KeyboardAwareContainer contentContainerStyle={{ paddingHorizontal: scaleY(16), backgroundColor: theme.colors.background }}>
+            <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
+                <KeyboardAwareContainer
+                    contentContainerStyle={
+                        {...styles.container,
+                        backgroundColor: theme.colors.background,}
+                    }
+                >
+                    {/* Logo */}
                     <View style={styles.logoContainer}>
-                        <Image resizeMode="contain" style={styles.logo} source={require('../../../assets/images/flinteo.png')} />
+                        <Image
+                            resizeMode="contain"
+                            style={styles.logo}
+                            source={require("../../../assets/images/flinteo.png")}
+                        />
                     </View>
-                    <Text
-                        style={[
-                            styles.title,
-                            { color: theme.colors.primary }
-                        ]}
-                    >
-                        Login
+
+                    {/* Title */}
+                    <Text style={[styles.title, { color: theme.colors.text }]}>
+                        Welcome back
                     </Text>
+
                     <Text
                         style={[
                             styles.subTitle,
-                            { color: theme.colors.surfaceText }
+                            { color: theme.colors.onSurfaceVariant },
                         ]}
                     >
-                        Enter your details to log in
+                        Login to continue learning with Flinteo
                     </Text>
-                    <EmailInput
-                        theme={theme}
-                        onChangeText={setEmail}
-                        errorMessage={error}
-                    />
 
-                    <PasswordInput
-                        theme={theme}
-                        onChangeText={setPassword}
-                        errorMessage={error}
-                    />
+                    {/* Inputs */}
+                    <View style={styles.form}>
+                        <EmailInput
+                            theme={theme}
+                            onChangeText={setEmail}
+                            errorMessage={error}
+                        />
 
+                        <PasswordInput
+                            theme={theme}
+                            onChangeText={setPassword}
+                            errorMessage={error}
+                        />
+                    </View>
+
+                    {/* Other Options */}
                     <TouchableOpacity
-                        style={styles.otpOptonContainer}
+                        style={styles.otherOption}
                         onPress={() =>
                             navScreen(
                                 navigation,
@@ -113,19 +127,21 @@ const LoginEmailPassword: React.FC<DefaultScreenProps> = ({
                     >
                         <Text
                             style={[
-                                styles.otpText,
-                                { color: theme.colors.primary }
+                                styles.otherText,
+                                { color: theme.colors.primary },
                             ]}
                         >
-                            Other Login Options
+                            Use another login method
                         </Text>
                         <ArrowRight
                             color={theme.colors.primary}
                             width={scaleX(16)}
                             height={scaleY(16)}
-                            strokeWidth={2.6}
+                            strokeWidth={2.4}
                         />
                     </TouchableOpacity>
+
+                    {/* CTA */}
                     <ActionButton
                         disabled={loading}
                         theme={theme}
@@ -136,47 +152,51 @@ const LoginEmailPassword: React.FC<DefaultScreenProps> = ({
             </View>
         </BaseView>
     );
-}
+};
+
+export default LoginEmailPassword;
+
 
 const styles = StyleSheet.create({
-    container: {
+    root: {
         flex: 1,
-        paddingHorizontal: scaleX(16)
     },
-    content: {
-        flex: 1,
-        width: Matrix.DIM_100,
-        rowGap: scaleY(12)
+    container: {
+        paddingHorizontal: scaleX(20),
+        paddingBottom: scaleY(24),
     },
     logoContainer: {
-        width: Matrix.DIM_100,
-        justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: "center",
+        marginTop: scaleY(24),
+        marginBottom: scaleY(24),
     },
     logo: {
-        width: Matrix.DIM_70,
-        height: scaleY(120)
+        width: Matrix.DIM_60,
+        height: scaleY(120),
     },
     title: {
-        fontSize: scaleY(28),
-        fontFamily: FONTS.InterExtraBold
+        fontSize: scaleY(26),
+        fontFamily: FONTS.InterExtraBold,
     },
     subTitle: {
-        fontSize: scaleY(16),
+        fontSize: scaleY(15),
         fontFamily: FONTS.InterRegular,
-        marginBottom: scaleY(12)
+        marginTop: scaleY(6),
+        marginBottom: scaleY(24),
     },
-    otpOptonContainer: {
+    form: {
+        rowGap: scaleY(14),
+    },
+    otherOption: {
         flexDirection: "row",
         alignItems: "center",
         columnGap: scaleX(6),
+        marginTop: scaleY(12),
+        marginBottom: scaleY(24),
         alignSelf: "flex-start",
-        paddingBottom: scaleY(16)
     },
-    otpText: {
+    otherText: {
         fontSize: scaleY(14),
-        fontFamily: FONTS.InterSemiBold
-    }
+        fontFamily: FONTS.InterSemiBold,
+    },
 });
-
-export default LoginEmailPassword;

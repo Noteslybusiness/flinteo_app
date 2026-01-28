@@ -91,7 +91,6 @@ const AdminDashboardScreen: React.FC<DefaultScreenProps> = ({
         <BaseView>
             <DashboardHeader
                 theme={theme}
-                title={organization?.org_info?.name || "Dashboard"}
                 onNotificationPress={() => {
                     navScreen(navigation, AppScreens.NOTIFICATION_STACK, NAV_ACTIONS.NAVIGATE, {
                         screen: AppScreens.NOTIFICATION_SCREEN,
@@ -100,16 +99,17 @@ const AdminDashboardScreen: React.FC<DefaultScreenProps> = ({
                         }
                     })
                 }}
-                onEditPress={() => { }}
+                firstName="Somesh"
+                roleName="Admin"
             />
             <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
                 <ScrollView
                 >
-                    <HeroBanner
+                    {/* <HeroBanner
                         theme={theme}
                         organization={organization}
                         onEditPress={handleEditProfilePress}
-                    />
+                    /> */}
                     <BlockSection
                        theme={theme} 
                         onPressInsights={() => navScreen(navigation, AppScreens.INSIGHT_STACK, NAV_ACTIONS.NAVIGATE)}
@@ -155,6 +155,5 @@ export default AdminDashboardScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
     },
 });
