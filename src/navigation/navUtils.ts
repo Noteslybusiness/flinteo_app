@@ -56,6 +56,7 @@ export const AppScreens = {
     // Viewer Users
     VIEWER_USER_STACK: 'ViewerUserStack',
     VIEWER_USER_TAB_STACK: 'ViewerUserTabStack',
+    VIEWER_PROFILE_EDIT_SCREEN: 'ViewerProfileEditScreen',
 
     // Courses screen
     MY_COURSE_DETAIL_SCREEN: 'CourseDetailScreen',

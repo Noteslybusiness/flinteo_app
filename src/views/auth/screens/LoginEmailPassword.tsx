@@ -133,7 +133,7 @@ const LoginEmailPassword: React.FC<DefaultScreenProps> = ({ navigation }) => {
                             { color: theme.colors.onSurfaceVariant },
                         ]}
                     >
-                        Login to continue learning with Flinteo
+                        Access your learning platform and explore courses
                     </Text>
 
                     {/* Inputs */}

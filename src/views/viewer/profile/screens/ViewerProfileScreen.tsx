@@ -6,10 +6,11 @@ import { ThemeContext } from '../../../../assets/theme/themeContext';
 import { UserSessionService } from '../../../../services/UserSessionService';
 import { scaleX, scaleY } from '../../../../utils/baseDim';
 import { FONTS } from '../../../../assets/theme/appFonts';
-import { User, LogOut, Settings } from 'lucide-react-native';
+import { User, LogOut, Settings, Edit3 } from 'lucide-react-native';
 import eventEmitter from '../../../../utils/eventEmiter';
 import { useAppDispatch, useAppSelector } from '../../../../hooks/storeHooks';
 import { getUserOrgProfileData } from '../../../../redux/organization/reducers/userProfileReducer';
+import { AppScreens, NAV_ACTIONS, navScreen } from '../../../../navigation/navUtils';
 
 const ViewerProfileScreen: React.FC<DefaultScreenProps> = ({ navigation }) => {
     const theme = useContext(ThemeContext);
@@ -23,6 +24,20 @@ const ViewerProfileScreen: React.FC<DefaultScreenProps> = ({ navigation }) => {
 
     const loadUserProfile = async () => {
         dispatch(getUserOrgProfileData({}));
+    };
+
+    const handleEditProfile = () => {
+        if (userProfileSuccess?.data) {
+            navScreen(
+                navigation,
+                AppScreens.VIEWER_PROFILE_EDIT_SCREEN,
+                NAV_ACTIONS.NAVIGATE,
+                {
+                    user_info: userProfileSuccess.data.user_info,
+                    org_info: userProfileSuccess.data.org_info,
+                }
+            );
+        }
     };
 
     const handleLogout = () => {
@@ -93,6 +108,14 @@ const ViewerProfileScreen: React.FC<DefaultScreenProps> = ({ navigation }) => {
                             </Text>
                         )}
                     </View>
+
+                    <TouchableOpacity 
+                        style={[styles.editButton, { backgroundColor: colors.primary }]}
+                        onPress={handleEditProfile}
+                        activeOpacity={0.7}
+                    >
+                        <Edit3 size={scaleX(16)} color={colors.onPrimary} />
+                    </TouchableOpacity>
                 </View>
 
                 {/* Menu Options */}
@@ -138,6 +161,7 @@ const styles = StyleSheet.create({
         marginBottom: scaleY(20),
         flexDirection: 'row',
         alignItems: 'center',
+        position: 'relative',
     },
     avatarContainer: {
         width: scaleX(80),
@@ -178,6 +202,24 @@ const styles = StyleSheet.create({
     organization: {
         fontSize: scaleY(12),
         fontFamily: FONTS.InterRegular,
+    },
+    editButton: {
+        width: scaleX(32),
+        height: scaleX(32),
+        borderRadius: scaleX(16),
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'absolute',
+        top: scaleY(16),
+        right: scaleX(16),
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     menuContainer: {
         gap: scaleY(12),

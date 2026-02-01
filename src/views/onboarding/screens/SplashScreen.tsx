@@ -117,7 +117,7 @@ const SplashScreen: React.FC<ViewProp> = ({ onCompleted }) => {
                         },
                     ]}
                 >
-                    Learn. Anytime. Anywhere.
+                    Empowering Education Excellence
                 </Animated.Text>
             </View>
         </BaseView>

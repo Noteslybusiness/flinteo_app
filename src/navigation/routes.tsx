@@ -31,6 +31,7 @@ import { Linking } from "react-native";
 import MyCourseDetailScreen from "../views/viewer/course/screens/MyCourseDetailScreen";
 import MyPlaybackScreen from "../views/viewer/course/screens/MyPlaybackScreen";
 import EditAdminCreatorProfile from "../views/admin/profile/screens/EditAdminCreatorProfile";
+import EditViewerProfile from "../views/viewer/profile/screens/EditViewerProfile";
 import NotificationScreen from "../views/notification/screen/NotificationScreen";
 import MyContentsScreen from "../views/admin/content/screens/MyContentsScreen";
 import MyArchiveContents from "../views/admin/content/screens/MyArchiveContents";
@@ -116,6 +117,7 @@ const NotifcationNavigator:React.FC = () => (
 const ViewerUserNavigator: React.FC = () => (
     <AppScreenStack.Navigator initialRouteName={AppScreens.VIEWER_USER_TAB_STACK}>
         <AppScreenStack.Screen options={{ headerShown: false }} name={AppScreens.VIEWER_USER_TAB_STACK} component={ViewerUserTabNavigator} />
+        <AppScreenStack.Screen options={{ headerShown: false }} name={AppScreens.VIEWER_PROFILE_EDIT_SCREEN} component={EditViewerProfile} />
         <AppScreenStack.Screen options={{ headerShown: false }} name={AppScreens.MY_COURSE_DETAIL_SCREEN} component={MyCourseDetailScreen} />
         <AppScreenStack.Screen options={{ headerShown: false }} name={AppScreens.MY_PLAYBACK_SCREEN} component={MyPlaybackScreen} />
     </AppScreenStack.Navigator>

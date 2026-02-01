@@ -9,7 +9,7 @@ interface Props {
 }
 
 const actions = [
-    { icon: Film, label: "My Contents" },
+    // { icon: Film, label: "My Contents" },
     { icon: Clock, label: "Archive Contents" },
     { icon: PlusCircle, label: "New Video" },
     { icon: AlertCircle, label: "Raise an Issue" },
