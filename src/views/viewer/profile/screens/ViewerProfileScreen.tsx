@@ -1,60 +1,198 @@
-import { StyleSheet, Text, View } from "react-native";
-import { BaseView } from "../../../common/base/BaseView";
-import { DefaultScreenProps } from "../../../common/props/DefaultScreenProps";
-import { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../../../../assets/theme/themeContext";
-import ProfileHeader from "../components/ProfileHeader";
-import UserCommonAction from "../../../admin/profile/components/UserCommonAction";
-import { scaleX, scaleY } from "../../../../utils/baseDim";
-import { userService } from "../../../../network/repo/users/UserService";
-import ProfileDetailsCard from "../components/ProfileDetailsCard";
+import React, { useContext, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { BaseView } from '../../../common/base/BaseView';
+import { DefaultScreenProps } from '../../../common/props/DefaultScreenProps';
+import { ThemeContext } from '../../../../assets/theme/themeContext';
+import { UserSessionService } from '../../../../services/UserSessionService';
+import { scaleX, scaleY } from '../../../../utils/baseDim';
+import { FONTS } from '../../../../assets/theme/appFonts';
+import { User, LogOut, Settings } from 'lucide-react-native';
+import eventEmitter from '../../../../utils/eventEmiter';
+import { useAppDispatch, useAppSelector } from '../../../../hooks/storeHooks';
+import { getUserOrgProfileData } from '../../../../redux/organization/reducers/userProfileReducer';
 
-
-const ViewerProfileScreen:React.FC<DefaultScreenProps> = () => {
-    const theme = useContext(ThemeContext)
-    const [userInfo, setUserInfo] = useState<any>()
+const ViewerProfileScreen: React.FC<DefaultScreenProps> = ({ navigation }) => {
+    const theme = useContext(ThemeContext);
+    const { colors } = theme;
+    const dispatch = useAppDispatch();
+    const { userProfileSuccess, userProfileLoading } = useAppSelector(state => state.userProfileReducer);
 
     useEffect(() => {
-        fetchUserInfo()
-    },[])
+        loadUserProfile();
+    }, []);
 
-    const fetchUserInfo = async () => {
-        try {
-            const response = await userService.getUserProfile()
-            setUserInfo(response?.data?.data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    const loadUserProfile = async () => {
+        dispatch(getUserOrgProfileData({}));
+    };
 
-    return <BaseView>
-        <View style={[styles.container, {
-            backgroundColor: theme.colors.background,
-        }]}>
-            <ProfileHeader theme={theme} title="Profile"/>
-            <View style={styles.contentContainer}>
+    const handleLogout = () => {
+        Alert.alert(
+            'Logout',
+            'Are you sure you want to logout?',
+            [
                 {
-                    userInfo &&
-                        <ProfileDetailsCard
-                            theme={theme}
-                            userInfo={userInfo}
-                        />
-                }
-                <UserCommonAction theme={theme}/>
-                
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Logout',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            await UserSessionService.logout();
+                            eventEmitter.emit('user-logout');
+                        } catch (error) {
+                            console.error('Error during logout:', error);
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+    return (
+        <BaseView>
+            <View style={[styles.container, { backgroundColor: colors.background }]}>
+                {/* Header */}
+                <View style={styles.header}>
+                    <Text style={[styles.title, { color: colors.text }]}>Profile</Text>
+                </View>
+
+                {/* Profile Info */}
+                <View style={[styles.profileCard, { backgroundColor: colors.surface }]}>
+                    <View style={styles.avatarContainer}>
+                        {userProfileSuccess?.data?.user_info?.profile_image ? (
+                            <Image 
+                                source={{ uri: userProfileSuccess.data.user_info.profile_image }} 
+                                style={styles.avatarImage}
+                                resizeMode="cover"
+                            />
+                        ) : (
+                            <View style={[styles.avatarPlaceholder, { backgroundColor: colors.primary }]}>
+                                <User size={scaleX(40)} color={colors.onPrimary} />
+                            </View>
+                        )}
+                    </View>
+                    
+                    <View style={styles.profileInfo}>
+                        <Text style={[styles.name, { color: colors.text }]}>
+                            {userProfileSuccess?.data?.user_info ? 
+                                `${userProfileSuccess.data.user_info.first_name} ${userProfileSuccess.data.user_info.last_name}` : 
+                                'Loading...'
+                            }
+                        </Text>
+                        <Text style={[styles.email, { color: colors.onSurfaceVariant }]}>
+                            {userProfileSuccess?.data?.user_info?.email || ''}
+                        </Text>
+                        <Text style={[styles.role, { color: colors.primary }]}>
+                            {userProfileSuccess?.data?.user_info?.role_name || ''}
+                        </Text>
+                        {userProfileSuccess?.data?.org_info?.name && (
+                            <Text style={[styles.organization, { color: colors.onSurfaceVariant }]}>
+                                {userProfileSuccess.data.org_info.name}
+                            </Text>
+                        )}
+                    </View>
+                </View>
+
+                {/* Menu Options */}
+                <View style={styles.menuContainer}>
+                    <TouchableOpacity 
+                        style={[styles.menuItem, { backgroundColor: colors.surface }]}
+                        activeOpacity={0.7}
+                    >
+                        <Settings size={scaleX(20)} color={colors.onSurfaceVariant} />
+                        <Text style={[styles.menuText, { color: colors.text }]}>Settings</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={[styles.menuItem, { backgroundColor: colors.surface }]}
+                        onPress={handleLogout}
+                        activeOpacity={0.7}
+                    >
+                        <LogOut size={scaleX(20)} color={colors.error} />
+                        <Text style={[styles.menuText, { color: colors.error }]}>Logout</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-        </View>
-    </BaseView>
-}
+        </BaseView>
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingHorizontal: scaleX(20),
     },
-    contentContainer: {
-        paddingHorizontal: scaleX(16),
-        paddingVertical: scaleY(16)
-    }
-})
+    header: {
+        paddingVertical: scaleY(20),
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: scaleY(24),
+        fontFamily: FONTS.InterBold,
+    },
+    profileCard: {
+        padding: scaleX(20),
+        borderRadius: scaleX(12),
+        marginBottom: scaleY(20),
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    avatarContainer: {
+        width: scaleX(80),
+        height: scaleX(80),
+        borderRadius: scaleX(40),
+        marginRight: scaleX(16),
+        overflow: 'hidden',
+    },
+    avatarImage: {
+        width: '100%',
+        height: '100%',
+    },
+    avatarPlaceholder: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    profileInfo: {
+        flex: 1,
+    },
+    name: {
+        fontSize: scaleY(18),
+        fontFamily: FONTS.InterBold,
+        marginBottom: scaleY(4),
+    },
+    email: {
+        fontSize: scaleY(14),
+        fontFamily: FONTS.InterRegular,
+        marginBottom: scaleY(4),
+    },
+    role: {
+        fontSize: scaleY(12),
+        fontFamily: FONTS.InterMedium,
+        textTransform: 'capitalize',
+        marginBottom: scaleY(4),
+    },
+    organization: {
+        fontSize: scaleY(12),
+        fontFamily: FONTS.InterRegular,
+    },
+    menuContainer: {
+        gap: scaleY(12),
+    },
+    menuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: scaleX(16),
+        borderRadius: scaleX(8),
+        gap: scaleX(12),
+    },
+    menuText: {
+        fontSize: scaleY(16),
+        fontFamily: FONTS.InterMedium,
+    },
+});
 
-export default ViewerProfileScreen
+export default ViewerProfileScreen;

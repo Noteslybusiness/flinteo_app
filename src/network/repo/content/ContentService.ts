@@ -115,6 +115,10 @@ class ContentService {
     public async postUserContentAction(config: any): Promise<AxiosResponse> {
         return await apiClient.post(ContentUrls.POST_USER_CONTENT_ACTION, config);
     }
+
+    public async getMyWatchHistory(config: any): Promise<AxiosResponse> {
+      return await apiClient.get(ContentUrls.MY_WATCH_HISTORY, { params: config });
+  }
 }
 
 export const contentService = new ContentService();

@@ -118,11 +118,10 @@ const AllCoursesTab: React.FC = () => {
                 onPress={() =>
                     navScreen(
                         navigation,
-                        AppScreens.CONTENT_STACK,
+                        AppScreens.COURSE_DETAIL_SCREEN,
                         NAV_ACTIONS.NAVIGATE,
                         {
-                            screen: AppScreens.COURSE_DETAIL_SCREEN,
-                            params: { slug: item.slug },
+                            slug: item.slug
                         }
                     )
                 }

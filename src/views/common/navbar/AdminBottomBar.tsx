@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import { Home, Search, Users, User, Layers } from "lucide-react-native";
+import { Home, Search, Users, User, Layers, FolderOpen } from "lucide-react-native";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { ThemeContext } from "../../../assets/theme/themeContext";
 import { FONTS } from "../../../assets/theme/appFonts";
@@ -10,7 +10,7 @@ import { scaleY } from "../../../utils/baseDim";
 const AdminBottomBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     const icons: any = {
         Home: Home,
-        Explore: Layers,
+        "My Content": FolderOpen,
         Users: Users,
         Profile: User,
     };

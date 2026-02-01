@@ -34,14 +34,12 @@ const AdminCreatorProfile: React.FC<DefaultScreenProps> = ({
     },[userProfileData])
 
     const handleActionPress = (action: string) => {
-        if(action === 'My Contents')
-            navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-                screen: AppScreens.MY_PUBLISHED_CONTENT_SCREEN
-            })
+        if(action === 'My Contents') {
+            // Navigate to My Content tab
+            navigation.navigate('My Content');
+        }
         else if(action === 'Archive Contents'){
-            navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-                screen: AppScreens.MY_ARCHIVE_CONTENT_SCREEN
-            })
+            navScreen(navigation, AppScreens.MY_ARCHIVE_CONTENT_SCREEN, NAV_ACTIONS.NAVIGATE)
         }
         else if(action === 'Pending Videos')
             console.log('Pending Videos')

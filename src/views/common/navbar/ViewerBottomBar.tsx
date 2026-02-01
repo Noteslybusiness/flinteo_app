@@ -1,99 +1,86 @@
-import React, { useContext } from "react";
-import { View, TouchableOpacity, StyleSheet, Text } from "react-native";
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { Home, Search, Inbox, User } from "lucide-react-native";
-import { Matrix, scaleX, scaleY, SCREEN, VIEWER_BAR_HEIGHT } from "../../../utils/baseDim";
-import { ThemeContext } from "../../../assets/theme/themeContext";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import React, { useContext } from 'react';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { ThemeContext } from '../../../assets/theme/themeContext';
+import { scaleX, scaleY } from '../../../utils/baseDim';
+import { Home, Bell, User } from 'lucide-react-native';
 
-const tabs = [
-    { id: "Home", label: "Home", icon: Home },
-    { id: "Discover", label: "Discover", icon: Search },
-    { id: "Inbox", label: "Inbox", icon: Inbox },
-    { id: "Profile", label: "Profile", icon: User },
-];
+const ViewerBottomBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
+    const theme = useContext(ThemeContext);
+    const { colors } = theme;
 
-const ViewerBottomBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
-    const theme = useContext(ThemeContext)
-    const inset = useSafeAreaInsets()
+    const getTabIcon = (routeName: string, isFocused: boolean) => {
+        const iconColor = isFocused ? colors.primary : colors.onSurfaceVariant;
+        const iconSize = scaleX(24);
+
+        switch (routeName) {
+            case 'Home':
+                return <Home size={iconSize} color={iconColor} />;
+            case 'Notifications':
+                return <Bell size={iconSize} color={iconColor} />;
+            case 'Profile':
+                return <User size={iconSize} color={iconColor} />;
+            default:
+                return <Home size={iconSize} color={iconColor} />;
+        }
+    };
 
     return (
-        <View style={styles.wrapper}>
-            <View style={[styles.container, { backgroundColor: theme.colors.background, paddingBottom: inset.bottom + 8}]}>
-                {state.routes.map((route, index) => {
-                    const isActive = state.index === index;
+        <View style={[styles.container, { backgroundColor: colors.surface }]}>
+            {state.routes.map((route, index) => {
+                const { options } = descriptors[route.key];
+                const label = options.tabBarLabel !== undefined 
+                    ? options.tabBarLabel 
+                    : options.title !== undefined 
+                    ? options.title 
+                    : route.name;
 
-                    const tabConfig = tabs.find(t => t.id === route.name);
-                    if (!tabConfig) return null;
+                const isFocused = state.index === index;
 
-                    const Icon = tabConfig.icon;
+                const onPress = () => {
+                    const event = navigation.emit({
+                        type: 'tabPress',
+                        target: route.key,
+                        canPreventDefault: true,
+                    });
 
-                    return (
-                        <TouchableOpacity
-                            key={route.key}
-                            style={styles.tabBtn}
-                            onPress={() => navigation.navigate(route.name)}
-                        >
-                            <Icon
-                                size={22}
-                                color={isActive ? "#3366FF" : "#8A8A8A"}
-                                strokeWidth={2}
-                            />
-                            <Text
-                                style={[
-                                    styles.label,
-                                    { color: isActive ? "#3366FF" : "#8A8A8A" },
-                                ]}
-                            >
-                                {tabConfig.label}
-                            </Text>
-                        </TouchableOpacity>
-                    );
-                })}
-            </View>
+                    if (!isFocused && !event.defaultPrevented) {
+                        navigation.navigate(route.name);
+                    }
+                };
+
+                return (
+                    <TouchableOpacity
+                        key={route.key}
+                        accessibilityRole="button"
+                        accessibilityState={isFocused ? { selected: true } : {}}
+                        accessibilityLabel={options.tabBarAccessibilityLabel}
+                        onPress={onPress}
+                        style={styles.tab}
+                        activeOpacity={0.7}
+                    >
+                        {getTabIcon(route.name, isFocused)}
+                    </TouchableOpacity>
+                );
+            })}
         </View>
     );
 };
 
-export default ViewerBottomBar;
-
 const styles = StyleSheet.create({
-    wrapper: {
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        alignItems: "center",
-        zIndex: 999,
-        height: VIEWER_BAR_HEIGHT,
-        paddingTop: scaleY(12)
-    },
-
     container: {
-        width: Matrix.DIM_100,
-        height: VIEWER_BAR_HEIGHT,
-        flexDirection: "row",
-        justifyContent: "space-around",
-        paddingVertical: 10,
-        paddingHorizontal: 14,
-        // borderTopLeftRadius: scaleX(16),
-        // borderTopRightRadius: scaleX(16),
-        shadowColor: "#000",
-        shadowOpacity: 0.12,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 3 },
-        elevation: 8,
+        flexDirection: 'row',
+        height: scaleY(60),
+        paddingHorizontal: scaleX(20),
+        paddingBottom: scaleY(8),
+        borderTopWidth: 1,
+        borderTopColor: 'rgba(0,0,0,0.1)',
     },
-
-    tabBtn: {
-        alignItems: "center",
-        justifyContent: "center",
+    tab: {
         flex: 1,
-    },
-
-    label: {
-        marginTop: 3,
-        fontSize: 12,
-        fontWeight: "600",
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
+
+export default ViewerBottomBar;

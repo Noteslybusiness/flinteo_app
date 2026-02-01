@@ -1,15 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export type UserType = "admin" | "creator" | "viewer";
+export type UserType = "admin" | "creator" | "viewer" | "student";
 
 export interface UserProfile {
-    id: string;
+    id: number;
     email: string;
     first_name: string;
     last_name: string;
-    mobile_number: string;
+    mobile_number?: string | null;
     role_id: number;
     role_name: UserType;
+    organization_id?: number;
+    organization_name?: string;
+    profile_image?: string | null;
 }
 
 export interface AuthToken {

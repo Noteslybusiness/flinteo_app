@@ -76,13 +76,9 @@ const VideoDetailScreen: React.FC<DefaultScreenProps> = ({
         return (
             <TouchableOpacity style={[styles.card, { backgroundColor: theme.colors.surface }]}
                 onPress={() => {
-                    navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-                        screen: AppScreens.COURSE_DETAIL_SCREEN,
-                        params: {
-                            slug: item.slug
-                        }
-                    }
-                    )
+                    navScreen(navigation, AppScreens.COURSE_DETAIL_SCREEN, NAV_ACTIONS.NAVIGATE, {
+                        slug: item.slug
+                    })
                 }}
             >
                 {/* Thumbnail */}
@@ -137,11 +133,8 @@ const VideoDetailScreen: React.FC<DefaultScreenProps> = ({
                 title="Video Detail"
                 onBackPress={() => navigation.goBack()}
                 onEditPress={() => {
-                    navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-                        screen: AppScreens.EDIT_VIDEO_SCREEN,
-                        params: {
-                            videoInfo: videoInfo
-                        }
+                    navScreen(navigation, AppScreens.EDIT_VIDEO_SCREEN, NAV_ACTIONS.NAVIGATE, {
+                        slug: videoInfo?.slug
                     })
                 }}
             />

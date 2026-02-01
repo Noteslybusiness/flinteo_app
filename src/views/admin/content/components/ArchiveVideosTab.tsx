@@ -99,9 +99,8 @@ const ArchiveVideosTab: React.FC = () => {
                 activeOpacity={0.8}
                 style={[styles.card, { backgroundColor: colors.surface }]}
                 onPress={() =>
-                    navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-                        screen: AppScreens.UPLOAD_VIDEO_SCREEN,
-                        params: { slug: item.slug },
+                    navScreen(navigation, AppScreens.UPLOAD_VIDEO_SCREEN, NAV_ACTIONS.NAVIGATE, {
+                        slug: item.slug
                     })
                 }
             >

@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     Animated,
+    Image,
 } from "react-native";
 import { BaseView } from "../../common/base/BaseView";
 import { ThemeContext } from "../../../assets/theme/themeContext";
@@ -74,6 +75,23 @@ const SplashScreen: React.FC<ViewProp> = ({ onCompleted }) => {
                     { backgroundColor: theme.colors.background },
                 ]}
             >
+                {/* Logo */}
+                <Animated.View
+                    style={[
+                        styles.logoContainer,
+                        {
+                            opacity: logoOpacity,
+                            transform: [{ scale: logoScale }],
+                        },
+                    ]}
+                >
+                    <Image
+                        source={require("../../../assets/images/FlinteoFavicon.png")}
+                        style={styles.logo}
+                        resizeMode="contain"
+                    />
+                </Animated.View>
+
                 {/* App Name */}
                 <Animated.Text
                     style={[
@@ -114,6 +132,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    logoContainer: {
+        marginBottom: scaleY(16),
+    },
+    logo: {
+        width: scaleY(80),
+        height: scaleY(80),
     },
     appName: {
         fontSize: scaleY(36),

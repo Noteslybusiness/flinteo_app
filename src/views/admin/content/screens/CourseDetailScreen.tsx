@@ -102,9 +102,9 @@ const CourseDetailScreen: React.FC<DefaultScreenProps> = ({ navigation, route })
 				title="Course Details"
 				onBackPress={() => navigation.goBack()}
 				onEditPress={() =>
-					navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-						screen: AppScreens.EDIT_COURSE_SCREEN,
-						params: { course_info: courseInfo, video_contents: videos },
+					navScreen(navigation, AppScreens.EDIT_COURSE_SCREEN, NAV_ACTIONS.NAVIGATE, {
+						course_info: courseInfo, 
+						video_contents: videos
 					})
 				}
 			/>

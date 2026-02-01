@@ -117,15 +117,13 @@ const AdminDashboardScreen: React.FC<DefaultScreenProps> = ({
                     <VideoSection theme={theme} videos={topVideos}
                         title="Most Viewed"
                         onItemClick={(slug: string) => {
-                            navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-                                screen: AppScreens.VIDEO_DETAIL_SCREEN,
-                                params: {
-                                    slug: slug
-                                }
+                            navScreen(navigation, AppScreens.VIDEO_DETAIL_SCREEN, NAV_ACTIONS.NAVIGATE, {
+                                slug: slug
                             })
                         }}
                         onViewAll={() => {
-                            navScreen(navigation, "Explore", NAV_ACTIONS.NAVIGATE)
+                            // Navigate to My Content tab
+                            navigation.navigate("My Content")
                         }}
                         onEmptyAction={handleAddVideoPress}
                         emptyActionText="Create New"
@@ -133,11 +131,8 @@ const AdminDashboardScreen: React.FC<DefaultScreenProps> = ({
                     />
                     <RecentVideosSerction theme={theme} videos={recentVideos}
                         onItemClick={(slug: string) => {
-                            navScreen(navigation, AppScreens.CONTENT_STACK, NAV_ACTIONS.NAVIGATE, {
-                                screen: AppScreens.VIDEO_DETAIL_SCREEN,
-                                params: {
-                                    slug: slug
-                                }
+                            navScreen(navigation, AppScreens.VIDEO_DETAIL_SCREEN, NAV_ACTIONS.NAVIGATE, {
+                                slug: slug
                             })
                         }}
                         loading={recentVideoLoading}

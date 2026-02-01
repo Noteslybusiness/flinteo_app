@@ -18,7 +18,6 @@ export const AppScreens = {
     ADMIN_USER_TAB_STACK: 'AdminUserTab',
     DASHBOARD_SCREEN: 'DashboardScreen',
     USER_LIST_SCREEN: 'UserListScreen',
-    EXPLORE_SCREEN: 'ExploreScreen',
     PROFILE_SCREEN: 'ProfileScreen',
 
     USERS_STACK: 'UsersStack',
@@ -33,7 +32,6 @@ export const AppScreens = {
     INSIGHT_STACK: 'InsightStack',
     INSIGHT_SCREEN: 'InsightScreen',
 
-    CONTENT_STACK: 'ContentStack',
     MY_PUBLISHED_CONTENT_SCREEN: 'MyPublishedContentsScreen',
     MY_ARCHIVE_CONTENT_SCREEN: 'MyArchiveContentsScreen',
     VIDEO_DETAIL_SCREEN: 'VideoDetailScreen',

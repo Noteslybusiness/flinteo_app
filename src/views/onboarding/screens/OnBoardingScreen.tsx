@@ -5,6 +5,7 @@ import {
 	Animated,
 	FlatList,
 	TouchableOpacity,
+	Image,
 } from "react-native"
 import LinearGradient from "react-native-linear-gradient"
 import { useRef } from "react"
@@ -45,7 +46,14 @@ const OnBoardingAnimatedScreen = () => {
 				end={{ x: 1, y: 1 }}
 				style={styles.container}
 			>
-				<Text style={styles.brand}>FLINTEO</Text>
+				<View style={styles.header}>
+					<Image
+						source={require("../../../assets/images/FlinteoFavicon.png")}
+						style={styles.logo}
+						resizeMode="contain"
+					/>
+					<Text style={styles.brand}>FLINTEO</Text>
+				</View>
 
 				<Animated.FlatList
 					data={ONBOARDING_DATA}
@@ -129,12 +137,22 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingTop: scaleY(40),
 	},
+	header: {
+		flexDirection: "row",
+		alignItems: "center",
+		paddingHorizontal: scaleX(24),
+		marginBottom: scaleY(20),
+	},
+	logo: {
+		width: scaleY(24),
+		height: scaleY(24),
+		marginRight: scaleX(8),
+	},
 	brand: {
 		color: "#FFFFFF",
 		fontSize: scaleY(12),
 		fontFamily: FONTS.InterSemiBold,
 		letterSpacing: 2,
-		paddingHorizontal: scaleX(24),
 	},
 	slide: {
 		width: SCREEN.WIDTH,

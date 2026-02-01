@@ -38,7 +38,8 @@ export const ContentUrls = {
     USER_FEEDS_CONTENT: '/api/v1/org/content/feeds',
     USER_SHARED_CONTENT: '/api/v1/org/content/shared',
     MY_SHARED_COURSED: '/api/v1/org/content/my-shared-courses',
-    POST_USER_CONTENT_ACTION: 'api/v1/org/content/action'
+    POST_USER_CONTENT_ACTION: 'api/v1/org/content/action',
+    MY_WATCH_HISTORY: '/api/v1/org/content/my-watch-history',
 
 }
 
